@@ -1,22 +1,28 @@
-import {  useState } from "react";
+import {  useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { useTripsContext } from "../context/trips.store";
 import tripFill from "../interfaces/tripFill";
 import Trip from "../interfaces/trip";
+import { UseUserContext } from "../context/users.store";
 
 const AddTrip = () => {
   const { getAllTrips, createTrip } = useTripsContext();
+  const {token} = UseUserContext()
   const [formDetails, setFormDetails] = useState<Trip>(tripFill);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) return navigate("/login");
+  }, []);
 
   const create = () => {
     const newTrip = {
       ...formDetails,
       id: String(Date.now()),
     };
-    createTrip(newTrip);
+    createTrip(newTrip, token);
     getAllTrips();
     navigate("/")
   };

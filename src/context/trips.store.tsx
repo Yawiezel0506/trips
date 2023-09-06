@@ -9,16 +9,15 @@ import React, {
 import TripInArray from "../interfaces/tripInArr";
 import Trip from "../interfaces/trip";
 import tripTemplate from "../interfaces/tripTemplate";
-import config from "../utils/headerConfig";
 
 
 interface TripsContextValue {
   trips: TripInArray[];
   trip: Trip;
   getTrip: (tripId: string) => Promise<void | null>;
-  createTrip: (newTripData: Trip) => Promise<void>;
-  updateTrip: (tripId: string, updatedTripData: Trip ) => Promise<void>;
-  deleteTrip: (tripId: string) => Promise<void>;
+  createTrip: (newTripData: Trip, token: string | null) => Promise<void>;
+  updateTrip: (tripId: string, updatedTripData: Trip, token: string | null) => Promise<void>;
+  deleteTrip: (tripId: string, token: string | null) => Promise<void>;
   getAllTrips: () => Promise<void>;
 }
 
@@ -39,8 +38,7 @@ interface TripsProviderProps {
 export const TripsProvider: React.FC<TripsProviderProps> = ({ children }) => {
   const [trips, setTrips] = useState<TripInArray[]>([]);
   const [trip, setTrip] = useState<Trip>(tripTemplate);
-  
-  
+
   useEffect(() => {
     getAllTrips();
   }, []);
@@ -57,12 +55,19 @@ export const TripsProvider: React.FC<TripsProviderProps> = ({ children }) => {
     }
   };
 
-  const createTrip = async (newTripData: TripInArray): Promise<void> => {
+  const createTrip = async (
+    newTripData: TripInArray,
+    token: string | null
+  ): Promise<void> => {
     try {
       const response = await axios.post(
         "http://localhost:3000/api/trips",
         newTripData,
-        config
+        {
+          headers: {
+            Authorization: token || "test-token",
+          },
+        }
       );
       setTrips((prevTrips) => [...prevTrips, response.data]);
     } catch (error) {
@@ -72,14 +77,18 @@ export const TripsProvider: React.FC<TripsProviderProps> = ({ children }) => {
 
   const updateTrip = async (
     tripId: string,
-    updatedTripData: TripInArray
+    updatedTripData: TripInArray,
+    token: string | null
   ): Promise<void> => {
     try {
       await axios.put(
         `http://localhost:3000/api/trips/${tripId}`,
         updatedTripData,
-        config,
-        
+        {
+          headers: {
+            Authorization: token || "test-token",
+          },
+        }
       );
       setTrips((prevTrips) =>
         prevTrips.map((trip) => (trip.id === tripId ? updatedTripData : trip))
@@ -89,9 +98,16 @@ export const TripsProvider: React.FC<TripsProviderProps> = ({ children }) => {
     }
   };
 
-  const deleteTrip = async (tripId: string): Promise<void> => {
+  const deleteTrip = async (
+    tripId: string,
+    token: string | null
+  ): Promise<void> => {
     try {
-      await axios.delete(`http://localhost:3000/api/trips/${tripId}`, config);
+      await axios.delete(`http://localhost:3000/api/trips/${tripId}`, {
+        headers: {
+          Authorization: token || "test-token",
+        },
+      });
       setTrips((prevTrips) => prevTrips.filter((trip) => trip.id !== tripId));
     } catch (error) {
       console.error("Error deleting trip:", error);

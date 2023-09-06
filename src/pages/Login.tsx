@@ -6,19 +6,16 @@ import { UseUserContext } from "../context/users.store";
 const Login = () => {
   const navigate = useNavigate();
 
-  const { token, user, login } = UseUserContext();
+  const { login } = UseUserContext();
 
   const [formDetails, setFormDetails] = useState({
     email: "",
     password: "",
   });
 
-  const handleRegister = async () => {
+  const handleRegister = async() => {
     await login(formDetails)
-    console.log(token);
-    console.log(user);
-    
-    
+    navigate("/")
   }
 
   return (

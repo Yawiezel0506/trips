@@ -3,22 +3,26 @@ import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import { useTripsContext } from "../context/trips.store";
 import Trip from "../interfaces/trip";
+import { UseUserContext } from "../context/users.store";
 
 
 const Edit = () => {
   
   const { id } = useParams();
   const { getTrip, trip, updateTrip } = useTripsContext();
+  const {token} = UseUserContext()
   const [formDetails, setFormDetails] = useState<Trip>(trip);
 
   const navigate = useNavigate();
 
   const update = () => {
-    if (id) updateTrip(id, formDetails);
+    if (id) updateTrip(id, formDetails, token);
     navigate("/");
   };
 
-  // setFormDetails(trip)
+  useEffect(() => {
+    if (!token) return navigate("/login");
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {

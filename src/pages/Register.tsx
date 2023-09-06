@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { UseUserContext } from "../context/users.store";
@@ -14,10 +14,10 @@ const Register = () => {
     role: "",
   });
 
-  const handleRegister = async () => {
+  const handleRegister =async () => {
     await register(formDetails);
+    navigate("/login")
   };
-
 
   return (
     <Container>
@@ -25,7 +25,12 @@ const Register = () => {
         <div className="row justify-content-center">
           <div className="col-md-6">
             <div className="trip-info text-center">
-            <button className="btn btn-outline-dark" onClick={()=> navigate("/login")}>Go To Login</button>
+              <button
+                className="btn btn-outline-dark"
+                onClick={() => navigate("/login")}
+              >
+                Go To Login
+              </button>
 
               <h1 className="display-5 my-3">Register</h1>
               {formDetails && (
@@ -70,7 +75,9 @@ const Register = () => {
               )}
             </div>
             <div className="trip-info d-flex justify-content-around">
-              <button onClick={handleRegister} className="btn btn-success">Register</button>
+              <button onClick={handleRegister} className="btn btn-success">
+                Register
+              </button>
             </div>
           </div>
         </div>

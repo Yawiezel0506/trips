@@ -8,4 +8,4 @@ const config: AxiosRequestConfig = {
   headers: headers,
 };
 
-export default config
+export default config;

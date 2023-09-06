@@ -29,7 +29,7 @@ export const UsersProvider: React.FC<UsersProviderProps> = ({ children }) => {
   const [user, setUser] = useState(null);
 
   const login = async (user: User): Promise<void | null> => {
-    console.log(user);
+    // console.log(user);
     
     try {
       const response = await axios.post(
@@ -38,10 +38,15 @@ export const UsersProvider: React.FC<UsersProviderProps> = ({ children }) => {
         config
       );
       //   localStorage.setItem("@token", JSON.stringify(response.data.token)
-      console.log(response);
+      console.log(response.data.responseObj);
 
-      setUser(response.data.user);
-      setToken(response.data.token);
+      setUser(response.data.responseObj.user);
+      setToken(response.data.responseObj.token);
+
+      console.log(user, token);
+      
+      
+      
     } catch (error) {
       console.error("Error fetching trip:", error);
       return null;

@@ -3,9 +3,11 @@ import { useTripsContext } from "../context/trips.store";
 import Loading from "./Loading";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { UseUserContext } from "../context/users.store";
 
 const Trip = () => {
   const { trip, getTrip, deleteTrip } = useTripsContext();
+  const {token} = UseUserContext()
   const { id } = useParams();
   const navigate = useNavigate()
   useEffect(() => {
@@ -14,8 +16,12 @@ const Trip = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!token) return navigate("/login");
+  }, []);
+
   const del =()=> {
-    id && deleteTrip(id)
+    id && deleteTrip(id, token)
     navigate("/")
   }
   if (!trip) return <Loading />;
